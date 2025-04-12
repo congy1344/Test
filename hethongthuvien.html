@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thư Viện Số - Trang Độc Giả</title>
+    <style>
+      :root {
+        --primary-color: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary-color: #f59e0b;
+        --text-color: #1f2937;
+        --text-light: #6b7280;
+        --bg-color: #f3f4f6;
+        --white: #ffffff;
+        --error: #ef4444;
+        --success: #10b981;
+        --border-color: #e5e7eb;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --radius: 0.375rem;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.5;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      /* Header Styles */
+      header {
+        background-color: var(--white);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .header-container {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 2rem;
+        align-items: center;
+        padding: 1rem 0;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      .logo img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .search-form {
+        max-width: 600px;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        background-color: var(--bg-color);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+      }
+
+      .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        transition: background-color 0.3s;
+      }
+
+      .user-menu:hover {
+        background-color: var(--bg-color);
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .user-name {
+        font-weight: 500;
+      }
+
+      .user-role {
+        font-size: 0.75rem;
+        color: var(--text-light);
+      }
+
+      .notification {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .notification-dot {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 8px;
+        height: 8px;
+        background-color: var(--error);
+        border-radius: 50%;
+      }
+
+      /* Navigation */
+      nav {
+        background-color: var(--white);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        padding: 0.5rem 0;
+      }
+
+      .nav-link {
+        position: relative;
+        padding: 0.75rem 0;
+        color: var(--text-color);
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--primary-color);
+        transform: scaleX(0);
+        transition: transform 0.3s;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--primary-color);
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        transform: scaleX(1);
+      }
+
+      /* Main Content */
+      main {
+        padding: 2rem 0;
+      }
+
+      .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .book-card {
+        background-color: var(--white);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .book-cover {
+        height: 280px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .book-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+      }
+
+      .book-card:hover .book-cover img {
+        transform: scale(1.05);
+      }
+
+      .book-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        padding: 1rem;
+        color: var(--white);
+      }
+
+      .book-category {
+        display: inline-block;
+        background-color: rgb(85, 142, 255);
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .book-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .book-author {
+        font-size: 0.875rem;
+        opacity: 0.9;
+      }
+
+      .book-content {
+        padding: 1rem;
+      }
+
+      .book-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-light);
+      }
+
+      .book-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .book-rating .star {
+        color: #fbbf24;
+      }
+
+      .book-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .btn-borrow {
+        flex: 1;
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 0.5rem;
+        border-radius: var(--radius);
+        text-align: center;
+        font-weight: 500;
+        transition: background-color 0.3s;
+      }
+
+      .btn-borrow:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .btn-favorite {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius);
+        background-color: rgba(37, 99, 235, 0.1);
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+
+      .btn-favorite:hover {
+        background-color: var(--primary-color);
+        color: var(--white);
+      }
+
+      .search-section {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+      }
+
+      .search-form {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .search-btn {
+        padding: 0.75rem 1.5rem;
+        background-color: var(--primary-color);
+        color: var(--white);
+        border: none;
+        border-radius: var(--radius);
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .search-btn:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .filters {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .filter-btn {
+        padding: 0.5rem 1rem;
+        background-color: rgba(37, 99, 235, 0.1);
+        color: var(--primary-color);
+        border: none;
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background-color: var(--primary-color);
+        color: var(--white);
+      }
+
+      /* Tables */
+      .table-container {
+        background-color: var(--white);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      th {
+        background-color: rgba(243, 244, 246, 0.7);
+        font-weight: 600;
+        color: var(--text-color);
+        font-size: 0.875rem;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Forms */
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.625rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.625rem 1rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: var(--white);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background-color: var(--secondary-color);
+        color: var(--white);
+      }
+
+      .btn-secondary:hover {
+        opacity: 0.9;
+      }
+
+      /* Status Badges */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.625rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .status-success {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+      }
+
+      .status-warning {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: var(--secondary-color);
+      }
+
+      .status-error {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: var(--error);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .book-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .header-container {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .user-menu {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+
+      /* Accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+
+      /* Focus Indicators */
+      a:focus,
+      button:focus,
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+
+      /* Tooltips */
+      [data-tooltip] {
+        position: relative;
+      }
+
+      [data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--text-color);
+        color: var(--white);
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        font-size: 0.75rem;
+        white-space: nowrap;
+        z-index: 10;
+        box-shadow: var(--shadow);
+      }
+
+      /* Style cho phần tổng hợp độc giả */
+      .user-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .summary-card {
+        background-color: var(--white);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s;
+      }
+
+      .summary-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .summary-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background-color: rgba(37, 99, 235, 0.1);
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+
+      .summary-content {
+        flex: 1;
+      }
+
+      .summary-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 0.25rem;
+      }
+
+      .summary-label {
+        font-size: 0.875rem;
+        color: var(--text-light);
+      }
+
+      /* Thêm style cho bảng sách đang mượn */
+      .borrowed-books {
+        margin-top: 2rem;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .view-all {
+        color: var(--primary-color);
+        font-size: 0.875rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: all 0.3s;
+      }
+
+      .view-all:hover {
+        opacity: 0.8;
+        transform: translateX(4px);
+      }
+
+      .book-table {
+        width: 100%;
+        background: var(--white);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .book-table th {
+        background: rgba(37, 99, 235, 0.05);
+        font-weight: 600;
+        padding: 1rem;
+        text-align: left;
+        color: var(--text-color);
+        font-size: 0.875rem;
+      }
+
+      .book-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .book-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .book-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .book-cover-small {
+        width: 48px;
+        height: 64px;
+        border-radius: var(--radius);
+        object-fit: cover;
+      }
+
+      .book-details h4 {
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 0.25rem;
+      }
+
+      .book-details .author {
+        font-size: 0.875rem;
+        color: var(--text-light);
+      }
+
+      .status-badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+      }
+
+      .status-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      .status-success::before {
+        background-color: var(--success);
+      }
+
+      .status-warning::before {
+        background-color: var(--secondary-color);
+      }
+
+      .status-error::before {
+        background-color: var(--error);
+      }
+
+      .btn-extend {
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        border: none;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-extend:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+      }
+
+      .btn-extend:active {
+        transform: translateY(0);
+      }
+
+      @media (max-width: 768px) {
+        .book-table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .book-info {
+          min-width: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-container">
+          <div class="logo">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png"
+              alt="Logo Thư viện"
+            />
+            <span>Thư Viện Số</span>
+          </div>
+
+          <form class="search-form">
+            <span class="search-icon">🔍</span>
+            <input
+              type="search"
+              class="search-input"
+              placeholder="Tìm kiếm sách, tác giả, thể loại..."
+            />
+          </form>
+
+          <div class="user-menu">
+            <div class="notification" data-tooltip="Thông báo">
+              🔔
+              <span class="notification-dot"></span>
+            </div>
+            <div class="user-info">
+              <div class="avatar"></div>
+              <div>
+                <div class="user-name">Nguyễn Văn A</div>
+                <div class="user-role">Độc giả</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav>
+      <div class="container">
+        <div class="nav-container">
+          <a href="#" class="nav-link active">Trang chủ</a>
+          <a href="#" class="nav-link">Sách đang mượn</a>
+          <a href="#" class="nav-link">Lịch sử mượn</a>
+          <a href="#" class="nav-link">Sách yêu thích</a>
+          <a href="#" class="nav-link">Tài khoản</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <div class="container">
+        <div class="user-summary">
+          <div class="summary-card">
+            <div class="summary-icon">📚</div>
+            <div class="summary-content">
+              <div class="summary-value">3</div>
+              <div class="summary-label">Sách đang mượn</div>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-icon">📅</div>
+            <div class="summary-content">
+              <div class="summary-value">16/04/2025</div>
+              <div class="summary-label">Hạn trả gần nhất</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thêm phần sách đang mượn -->
+        <div class="borrowed-books">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span>📚</span>
+              Sách đang mượn
+            </h2>
+            <a href="#" class="view-all">
+              Xem tất cả
+              <span>→</span>
+            </a>
+          </div>
+
+          <table class="book-table">
+            <thead>
+              <tr>
+                <th>Thông tin sách</th>
+                <th>Ngày mượn</th>
+                <th>Ngày hết hạn</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="book-info">
+                    <img
+                      src="../CNPM/demen.jpg"
+                      alt="Dế Mèn Phiêu Lưu Ký"
+                      class="book-cover-small"
+                    />
+                    <div class="book-details">
+                      <h4>Dế Mèn Phiêu Lưu Ký</h4>
+                      <div class="author">Tô Hoài</div>
+                    </div>
+                  </div>
+                </td>
+                <td>01/04/2025</td>
+                <td>01/05/2025</td>
+                <td>
+                  <span class="status-badge status-success">Còn hạn</span>
+                </td>
+                <td>
+                  <button
+                    class="btn-extend"
+                    data-tooltip="Gia hạn thêm 15 ngày"
+                  >
+                    Gia hạn
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="book-info">
+                    <img
+                      src="../CNPM/nsxx.webp"
+                      alt="Những Ngôi Sao Xa Xôi"
+                      class="book-cover-small"
+                    />
+                    <div class="book-details">
+                      <h4>Những Ngôi Sao Xa Xôi</h4>
+                      <div class="author">Lê Minh Hà</div>
+                    </div>
+                  </div>
+                </td>
+                <td>25/03/2025</td>
+                <td>16/04/2025</td>
+                <td>
+                  <span class="status-badge status-warning">Sắp hết hạn</span>
+                </td>
+                <td>
+                  <button
+                    class="btn-extend"
+                    data-tooltip="Gia hạn thêm 15 ngày"
+                  >
+                    Gia hạn
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="book-info">
+                    <img
+                      src="../CNPM/python.jpg"
+                      alt="Lập Trình Python Cơ Bản"
+                      class="book-cover-small"
+                    />
+                    <div class="book-details">
+                      <h4>Lập Trình Python Cơ Bản</h4>
+                      <div class="author">Eric Matthes</div>
+                    </div>
+                  </div>
+                </td>
+                <td>15/03/2025</td>
+                <td>16/04/2025</td>
+                <td>
+                  <span class="status-badge status-warning">Sắp hết hạn</span>
+                </td>
+                <td>
+                  <button
+                    class="btn-extend"
+                    data-tooltip="Gia hạn thêm 15 ngày"
+                  >
+                    Gia hạn
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <br />
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>✨</span>
+            Sách gợi ý cho bạn
+          </h2>
+          <a href="#" class="view-all">
+            Xem tất cả
+            <span>→</span>
+          </a>
+        </div>
+
+        <div class="book-grid">
+          <div class="book-card">
+            <div class="book-cover">
+              <img src="../CNPM/demen.jpg" alt="Dế Mèn Phiêu Lưu Ký" />
+              <div class="book-overlay">
+                <span class="book-category">Văn học thiếu nhi</span>
+                <h3 class="book-title">Dế Mèn Phiêu Lưu Ký</h3>
+                <div class="book-author">Tô Hoài</div>
+              </div>
+            </div>
+            <div class="book-content">
+              <div class="book-meta">
+                <div class="book-rating">
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">☆</span>
+                  <span>(128)</span>
+                </div>
+                <span>Còn 5 bản</span>
+              </div>
+              <div class="book-actions">
+                <button class="btn-borrow">Mượn sách</button>
+                <button class="btn-favorite">❤</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-card">
+            <div class="book-cover">
+              <img
+                src="../CNPM/hoavang.jpg"
+                alt="Tôi thấy hoa vàng trên cỏ xanh"
+              />
+              <div class="book-overlay">
+                <span class="book-category">Văn học</span>
+                <h3 class="book-title">Tôi thấy hoa vàng trên cỏ xanh</h3>
+                <div class="book-author">Nguyễn Nhật Ánh</div>
+              </div>
+            </div>
+            <div class="book-content">
+              <div class="book-meta">
+                <div class="book-rating">
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span>(256)</span>
+                </div>
+                <span>Còn 3 bản</span>
+              </div>
+              <div class="book-actions">
+                <button class="btn-borrow">Mượn sách</button>
+                <button class="btn-favorite">❤</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-card">
+            <div class="book-cover">
+              <img src="../CNPM/ngk.jpg" alt="NGK" />
+              <div class="book-overlay">
+                <span class="book-category">Văn học</span>
+                <h3 class="book-title">Nhà Giả Kim</h3>
+                <div class="book-author">Paulo Coelho</div>
+              </div>
+            </div>
+            <div class="book-content">
+              <div class="book-meta">
+                <div class="book-rating">
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">☆</span>
+                  <span>(89)</span>
+                </div>
+                <span>Còn 2 bản</span>
+              </div>
+              <div class="book-actions">
+                <button class="btn-borrow">Mượn sách</button>
+                <button class="btn-favorite">❤</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-card">
+            <div class="book-cover">
+              <img src="../CNPM/dac-nhan-tam.webp" alt="Đắc Nhân Tâm" />
+              <div class="book-overlay">
+                <span class="book-category">Kỹ năng sống</span>
+                <h3 class="book-title">Đắc Nhân Tâm</h3>
+                <div class="book-author">Dale Carnegie</div>
+              </div>
+            </div>
+            <div class="book-content">
+              <div class="book-meta">
+                <div class="book-rating">
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span>(512)</span>
+                </div>
+                <span>Còn 4 bản</span>
+              </div>
+              <div class="book-actions">
+                <button class="btn-borrow">Mượn sách</button>
+                <button class="btn-favorite">❤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
